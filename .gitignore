@@ -1,0 +1,14 @@
+# Ignored node_modules folders in client and server
+client/node_modules
+server/node_modules
+
+# Ignore .env files in client and server
+client/.env
+server/.env
+
+# Ignore logs
+*.log
+
+# Ignore OS and editor files
+.DS_Store
+*.swp
