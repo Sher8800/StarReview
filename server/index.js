@@ -2,7 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import cors from 'cors'
-import userRoute from './routes/userRoute.js'
+import router from './routes/index.js'
 
 const app = express()
 dotenv.config()
@@ -14,7 +14,7 @@ const DB_PASSWORD = process.env.DB_PASSWORD
 app.use(cors())
 app.use(express.json())
 
-app.use(userRoute)
+app.use(router)
 
 const start = async () => {
     try {

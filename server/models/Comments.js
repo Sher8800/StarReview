@@ -2,8 +2,10 @@ import { Schema, model } from 'mongoose'
 
 const CommentsSchema = new Schema(
     {
-        autor: { type: String, required: true },
-        comments: { type: String, }
+        author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        recipient: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        comments: { type: String, },
+        rating: { type: Number }
     },
     { timestamps: true }
 )

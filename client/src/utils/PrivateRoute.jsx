@@ -1,10 +1,13 @@
 import { Navigate } from "react-router-dom"
 import Layout from "../components/Layout"
+import { useSelector } from "react-redux"
+import { userSelector } from "../redux/slices/userSlice"
 
 function PrivateRoute() {
-    const isAuthenticated = false
+    const { token } = useSelector(userSelector)
+
     return (
-        isAuthenticated ? <Layout /> : <Navigate to='/authorization' replace />
+        token ? <Layout /> : <Navigate to='/authorization' replace />
     )
 }
 

@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
 import styles from '../styles/Form.module.css'
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoIosPerson } from "react-icons/io";
 import { LuEyeOff } from "react-icons/lu";
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/slices/userSlice';
 
 function Form(props) {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const [viewPassword, setViewPassword] = useState(false)
 
     const {
@@ -22,9 +27,20 @@ function Form(props) {
         setViewPassword(!viewPassword)
     }
 
-    const onSubmit = (data, e) => {
-        e.stopPropagation()
-        reset()
+    const onSubmit = async (formData, e) => {
+        try {
+            e.stopPropagation()
+
+            if (props.loginApi) {
+                const response = await props.loginApi(formData).unwrap()
+                dispatch(setUser(response))
+                navigate('/')
+            }
+
+            reset()
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
     }
 
     return (
@@ -40,7 +56,8 @@ function Form(props) {
                             })}
                             className={styles.input_name}
                             type="text"
-                            id="name" />
+                            id="name"
+                            autocomplete="off" />
                         <label className={styles.placeholder} htmlFor="name">
                             <span><IoIosPerson /></span>
                             Name
@@ -60,7 +77,8 @@ function Form(props) {
                         })}
                         className={styles.input_email}
                         type="email"
-                        id="email" />
+                        id="email"
+                        autocomplete="off" />
                     <label className={styles.placeholder} htmlFor="email">
                         <span><MdOutlineEmail /></span>
                         Email address
@@ -76,7 +94,8 @@ function Form(props) {
                         })}
                         className={styles.input_password}
                         type={viewPassword ? 'text' : 'password'}
-                        id="password" />
+                        id="password"
+                        autocomplete="off" />
                     <label className={styles.placeholder} htmlFor="password">
                         <span><RiLockPasswordLine /></span>
                         Password
@@ -89,9 +108,9 @@ function Form(props) {
 
             <button disabled={!isValid} className={styles.btn}>{props.btnText}</button>
 
-            <span className={styles.have_account}>
+            {/* <span className={styles.have_account}>
                 {props.haveAccount} <NavLink className={styles.log_in} to={props.nav}>{props.textLink}</NavLink>
-            </span>
+            </span> */}
         </form>
     )
 }

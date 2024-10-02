@@ -37,6 +37,7 @@ class authController {
             await user.save()
 
             return res.status(201).json({
+                username: user.username,
                 email: user.email,
                 id: user._id,
                 token,
@@ -72,6 +73,7 @@ class authController {
             const token = generateAccessToken(user._id, user.roles)
 
             return res.status(200).json({
+                username: user.username,
                 email: user.email,
                 id: user._id,
                 token,

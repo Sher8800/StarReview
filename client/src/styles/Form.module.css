@@ -1,18 +1,9 @@
-.form_page {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(#b165a3, #534c75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .form_container,
 .inputs_container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 35px;
+    row-gap: 20px;
     font-size: 50px;
     font-weight: 500;
     color: white;
@@ -21,6 +12,7 @@
 .form_container {
     row-gap: 15px;
     pointer-events: none;
+    padding: 40px;
 }
 
 .input_container {
@@ -34,18 +26,17 @@
 .input_container input,
 .btn {
     pointer-events: all;
-    background-color: transparent;
-    color: white;
-    font-size: 25px;
-    border-radius: 10px;
+    background-color: white;
+    color: rgb(0, 196, 255);
+    font-size: 20px;
+    border-radius: 40px;
     border: none;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 6px 14px 6px inset,
-        rgba(177, 101, 163, 0.597) 0px 2px 0px 0px
+    box-shadow: 0px 0px 35px -4px rgb(8, 189, 255);
 }
 
 .input_container input {
-    width: 400px;
-    padding: 20px 0 20px 30px;
+    width: 300px;
+    padding: 10px 0 10px 20px;
     outline: none;
 }
 
@@ -53,10 +44,10 @@
     position: absolute;
     display: flex;
     column-gap: 5px;
-    top: 25%;
+    top: 30%;
     left: 7%;
     font-size: 20px;
-    color: rgba(187, 187, 187, 0.712);
+    color: rgba(0, 196, 255, 0.712);
     pointer-events: none;
     transition: all 0.4s linear;
 }
@@ -69,10 +60,10 @@
 .input_container input:focus~.placeholder,
 .input_container input:invalid~.placeholder,
 .input_container input:not(:focus):user-valid~.placeholder {
-    transform: translateY(-55px);
+    transform: translateY(-40px);
     left: 0px;
-    font-size: 25px;
-    color: white;
+    font-size: 20px;
+    color: rgb(0, 196, 255);
 }
 
 .input_container input:focus~.placeholder span,
@@ -101,7 +92,11 @@
 .btn {
     width: 50%;
     cursor: pointer;
-    padding: 20px;
+    padding: 10px;
+    color: white;
+    background: rgb(89, 215, 247);
+    /* background: radial-gradient(rgb(126, 219, 253), rgb(0, 128, 175)); */
+    box-shadow: 0px 0px 35px -4px rgb(42, 184, 255);
 }
 
 .btn:disabled {
@@ -111,15 +106,9 @@
 
 .error_message {
     text-align: left;
-    height: 20px;
+    height: 16px;
     margin: 10px 0 0 0;
     text-align: center;
-    font-size: 20px;
+    font-size: 16px;
     color: rgb(255, 40, 40);
-}
-
-.have_account,
-.log_in {
-    pointer-events: all;
-    font-size: 20px;
 }

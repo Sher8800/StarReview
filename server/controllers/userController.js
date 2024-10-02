@@ -7,6 +7,10 @@ class authController {
     async getAllUsers(req, res) {
         try {
             const users = await User.find()
+            if (users.length == 0) {
+                return res.status(200).json({ message: 'No users' })
+            }
+
             res.json(users)
         } catch (e) {
             console.log(e);
@@ -23,18 +27,6 @@ class authController {
 
         } catch (e) {
             console.log(e);
-            return res.status(500).json({ message: 'Server error' });
-        }
-    }
-
-    async deleteComment(req, res) {
-        try {
-            const commentId = req.params.commentId;
-            // Deleting a comment
-            await Comments.findByIdAndDelete(commentId);
-            return res.status(200).json({ message: 'Comment deleted successfully' });
-        } catch (error) {
-            console.error(error);
             return res.status(500).json({ message: 'Server error' });
         }
     }
