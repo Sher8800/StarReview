@@ -1,0 +1,48 @@
+.comments_page_container {
+    width: 75%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0px 30px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.comments_container {}
+
+.title {
+    text-align: center;
+    font-size: 40px;
+    margin: 10px;
+}
+
+.inp_comment_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.input,
+.btn {
+    border: none;
+    border-bottom: 2px solid rgba(185, 185, 185, 0.9);
+    padding: 10px 20px;
+    font-size: 20px;
+}
+
+.input {
+    outline: none;
+    width: 70%;
+}
+
+.rating_container {}
+
+.star {
+    cursor: pointer;
+    transition: color 200ms;
+}
+
+.btn {
+    cursor: pointer;
+    background-color: white;
+}

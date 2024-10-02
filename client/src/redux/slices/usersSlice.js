@@ -4,12 +4,12 @@ const initialState = {
     users: []
 }
 
-const userSlice = createSlice({
+const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        getUsers(state, { payload }) {
-            state.users = payload.users
+        getUsers(state, action) {
+            state.users = action.payload
         },
 
         removeUsersComments(state, { payload }) {
@@ -19,5 +19,5 @@ const userSlice = createSlice({
 })
 
 export const usersSelector = state => state.users;
-export const { setUser, removeUser } = userSlice.actions;
-export default userSlice.reducer;
+export const { getUsers, removeUser } = usersSlice.actions;
+export default usersSlice.reducer;

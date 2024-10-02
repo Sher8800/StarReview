@@ -19,13 +19,13 @@ function Header() {
     return (
         <header>
             <div className={styles.header_container}>
-                <Link className={styles.link}>
+                <Link to='/' className={styles.link}>
                     <div className={styles.user_img} style={{ backgroundImage: `url(${avatar})` }}>
                     </div>
                     {username}
                 </Link>
 
-                <Link className={styles.link}>
+                <Link to='allUsers' className={styles.link}>
                     All users
                 </Link>
 

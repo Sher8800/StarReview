@@ -13,7 +13,7 @@ class authController {
     // User registration
     async registration(req, res) {
         try {
-            const { username, email, password } = req.body
+            const { name, email, password } = req.body
 
             // Check if a user with this email exists
             const userExists = await User.findOne({ email })
@@ -28,7 +28,7 @@ class authController {
             const userRole = await Role.findOne({ role: 'USER' })
 
             // Create a new user
-            const user = new User({ username, email, password: hashPassword, roles: [userRole.role] })
+            const user = new User({ username: name, email, password: hashPassword, roles: [userRole.role] })
 
             // Generate a JWT token
             const token = generateAccessToken(user._id, user.roles)

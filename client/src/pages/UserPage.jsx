@@ -1,10 +1,18 @@
 import React from 'react'
+import UserPageComponent from '../components/UserPageComponent'
+import { useLocation } from 'react-router-dom'
 
 function UserPage() {
-    return (
-        <div>
+    const location = useLocation()
+    const { state } = location
 
-        </div>
+    return (
+        <UserPageComponent
+            username={state.user.username}
+            email={state.user.email}
+            roles={state.user.roles}
+            userPage={true}
+        />
     )
 }
 

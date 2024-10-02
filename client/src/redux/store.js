@@ -4,8 +4,10 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import userSlice from "./slices/userSlice";
 import usersSlice from "./slices/usersSlice";
 import { api } from "../api/api";
+import commentsSlice from "./slices/commentsSlice";
 
 const rootReducer = combineReducers({
+    comments: commentsSlice,
     user: userSlice,
     users: usersSlice,
     [api.reducerPath]: api.reducer,

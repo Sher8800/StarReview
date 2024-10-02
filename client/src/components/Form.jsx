@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from '../styles/Form.module.css'
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { MdOutlineEmail } from "react-icons/md";
 import { IoIosPerson } from "react-icons/io";
@@ -20,7 +20,7 @@ function Form(props) {
         handleSubmit,
         reset,
         formState: { errors, isValid },
-    } = useForm({ mode: 'onBlur' })
+    } = useForm({ mode: 'all' })
 
     const showPassword = (e) => {
         e.stopPropagation()
@@ -34,19 +34,31 @@ function Form(props) {
             if (props.loginApi) {
                 const response = await props.loginApi(formData).unwrap()
                 dispatch(setUser(response))
+
+                navigate('/')
+            }
+
+            if (props.registerApi) {
+                console.log(formData);
+                const response = await props.registerApi(formData).unwrap()
+                dispatch(setUser(response))
                 navigate('/')
             }
 
             reset()
         } catch (error) {
-            console.error('Login failed:', error);
+            console.error('Register failed:', error);
+            props.setCatchErrors(error)
+            setTimeout(() => {
+                props.setCatchErrors(null)
+            }, 3000);
+            reset()
         }
     }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form_container}>
             <label onClick={e => e.stopPropagation()} className={styles.inputs_container}>
-                {props.textForm}
 
                 {props.registrationPage &&
                     <div className={styles.input_container}>
@@ -57,7 +69,7 @@ function Form(props) {
                             className={styles.input_name}
                             type="text"
                             id="name"
-                            autocomplete="off" />
+                            autoComplete="off" />
                         <label className={styles.placeholder} htmlFor="name">
                             <span><IoIosPerson /></span>
                             Name
@@ -78,7 +90,7 @@ function Form(props) {
                         className={styles.input_email}
                         type="email"
                         id="email"
-                        autocomplete="off" />
+                        autoComplete="off" />
                     <label className={styles.placeholder} htmlFor="email">
                         <span><MdOutlineEmail /></span>
                         Email address
@@ -95,7 +107,7 @@ function Form(props) {
                         className={styles.input_password}
                         type={viewPassword ? 'text' : 'password'}
                         id="password"
-                        autocomplete="off" />
+                        autoComplete="off" />
                     <label className={styles.placeholder} htmlFor="password">
                         <span><RiLockPasswordLine /></span>
                         Password
@@ -107,10 +119,6 @@ function Form(props) {
 
 
             <button disabled={!isValid} className={styles.btn}>{props.btnText}</button>
-
-            {/* <span className={styles.have_account}>
-                {props.haveAccount} <NavLink className={styles.log_in} to={props.nav}>{props.textLink}</NavLink>
-            </span> */}
         </form>
     )
 }

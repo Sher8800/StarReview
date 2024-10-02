@@ -2,7 +2,7 @@ import { check, validationResult } from 'express-validator';
 
 const validateUser = [
     // Check the name (required, at least 3 characters)
-    check('username')
+    check('name')
         .trim()
         .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'),
 
