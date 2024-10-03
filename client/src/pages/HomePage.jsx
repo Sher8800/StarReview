@@ -1,17 +1,21 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { userSelector } from '../redux/slices/userSlice'
 import { useSelector } from 'react-redux'
 import UserPageComponent from '../components/UserPageComponent'
+import { usersSelector } from '../redux/slices/usersSlice'
 
 function HomePage() {
 
-    const { username, email, roles } = useSelector(userSelector)
+    const { id } = useSelector(userSelector)
+    const { users } = useSelector(usersSelector)
+
+    const [correntUser] = useMemo(() => {
+        return users.filter(user => user._id === id)
+    }, [users, id]);
 
     return (
         <UserPageComponent
-            username={username}
-            email={email}
-            roles={roles} />
+            user={correntUser} />
     )
 }
 

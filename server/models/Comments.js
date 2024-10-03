@@ -4,8 +4,8 @@ const CommentsSchema = new Schema(
     {
         author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         recipient: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        comments: { type: String, },
-        rating: { type: Number }
+        comments: { type: String, required: true },
+        rating: { type: Number, required: true }
     },
     { timestamps: true }
 )

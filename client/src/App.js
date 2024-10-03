@@ -9,16 +9,20 @@ import { useGetAllUsersQuery } from './api/api';
 import { getUsers } from './redux/slices/usersSlice';
 import AllUsersPage from './pages/AllUsersPage';
 import UserPage from './pages/UserPage';
+import { useEffect } from 'react';
 
 function App() {
-  // const dispatch = useDispatch()
 
-  // const { data: users, isLoading, isError, error } = useGetAllUsersQuery()
+  const dispatch = useDispatch()
+  const { data } = useGetAllUsersQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  })
 
-  // if (isLoading) return <p>Loading...</p>
-  // if (isError) return <p>Error: {error.message}</p>
-
-  // dispatch(getUsers(users))
+  useEffect(() => {
+    if (data) {
+      dispatch(getUsers(data))
+    }
+  }, [data, dispatch])
 
   return (
     <div className="App">

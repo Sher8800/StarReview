@@ -46,7 +46,7 @@
     top: 30%;
     left: 7%;
     font-size: 20px;
-    color: rgba(0, 196, 255, 0.712);
+    color: #00c4ffb6;
     pointer-events: none;
     transition: all 0.4s linear;
 }
@@ -74,11 +74,12 @@
 .icon_eye {
     pointer-events: all;
     position: absolute;
-    top: 27%;
+    top: 34%;
     right: 7%;
     font-size: 20px;
     cursor: pointer;
     opacity: 0;
+    color: #00c4ffb6;
 }
 
 .input_container input:focus~.icon_eye,

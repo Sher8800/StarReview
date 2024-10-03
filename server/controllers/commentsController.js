@@ -11,7 +11,7 @@ class commentsController {
                 return res.status(200).json({ message: 'No comments' })
             }
 
-            res.json(comments)
+            return res.json(comments)
         } catch (e) {
             console.log(e);
             res.status(500).json({ message: `Internal Server Error: ${e}` })
@@ -20,26 +20,24 @@ class commentsController {
 
     async createComment(req, res) {
         try {
-            const commenterId = req.params.id
+            const { comment, rating, commenterId, recipientId } = req.body
 
-            const { comment, rating, recipientId } = req.body
-
-            // Search for user by id
-            const commenter = await User.findById(commenterId)
-            if (!commenter) {
-                return res.status(400).json({ message: 'Commenter not found' })
-            }
-
-            // Search for user by id
+            // Finding the author of the comment
             const recipient = await User.findById(recipientId)
             if (!recipient) {
-                return res.status(400).json({ message: 'Recipient not found' })
+                return res.status(400).json({ message: 'RecipientId not found' })
+            }
+
+            // Finding the recipient of the comment
+            const commenter = await User.findById(commenterId)
+            if (!commenter) {
+                return res.status(400).json({ message: 'CommenterId not found' })
             }
 
             //Create a new comment
             const newComment = new Comments({
                 author: commenter._id,
-                recipient: recipientId,
+                recipient: recipient._id,
                 comments: comment,
                 rating
             })

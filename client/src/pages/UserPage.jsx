@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import UserPageComponent from '../components/UserPageComponent'
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { usersSelector } from '../redux/slices/usersSlice';
 
 function UserPage() {
-    const location = useLocation()
-    const { state } = location
+    const params = useParams()
+    const { id } = params
+    const { users } = useSelector(usersSelector)
+
+    const [correntUser] = useMemo(() => {
+        return users?.filter(user => user._id === id)
+    }, [users, id]);
 
     return (
         <UserPageComponent
-            username={state.user.username}
-            email={state.user.email}
-            roles={state.user.roles}
             userPage={true}
+            user={correntUser}
         />
     )
 }

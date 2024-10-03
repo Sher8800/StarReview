@@ -21,6 +21,8 @@ class authController {
     async deleteUser(req, res) {
         try {
             const userId = req.params.id;
+            console.log(userId);
+
             // Deleting a user
             await User.findByIdAndDelete(userId);
             return res.status(200).json({ message: 'User deleted successfully' });

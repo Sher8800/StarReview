@@ -1,37 +1,92 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styles from '../styles/CommentsPageComponent.module.css'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FaStar } from 'react-icons/fa';
+import { useCreateCommentMutation, useGetAllCommentsQuery } from '../api/api';
+import { userSelector } from '../redux/slices/userSlice';
+import { useParams } from 'react-router-dom';
+import { addCommentToUser, usersSelector } from '../redux/slices/usersSlice';
+import { MdDeleteOutline } from "react-icons/md";
+import { useForm } from 'react-hook-form';
 
-function CommentsPageComponent({ userPage }) {
-    const [comment, setComment] = useState(null)
+function CommentsPageComponent({ userPage, user }) {
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { isValid },
+    } = useForm({ mode: 'all' })
+
+    const dispatch = useDispatch()
+    const params = useParams()
+
+    const { id: recipientId } = params
+    const { id: commenterId, roles } = useSelector(userSelector)
+    const { users } = useSelector(usersSelector)
+
+    // const isAdmin = roles.includes("ADMIN");
+
+    const [createCommitApi] = useCreateCommentMutation()
+    const { data: allComments } = useGetAllCommentsQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    });
+
+    const userComments = useMemo(() => {
+        return allComments?.filter(cmt => cmt.recipient === recipientId)
+    }, [allComments, recipientId]);
+
+    const commentAuthor = useMemo(() => {
+        return users?.filter(user => user._id === userComments.author)
+    }, [users, recipientId]);
+
+    console.log(userComments);
+
+
+
     const [rating, setRating] = useState(0)
     const [hover, setHover] = useState(null)
-    const dispatch = useDispatch()
 
-    const addHandler = (e) => {
+    const onSubmit = async (formData, e) => {
         e.stopPropagation()
+        try {
+            const response = await createCommitApi({ ...formData, commenterId, recipientId, }).unwrap()
+            dispatch(addCommentToUser({ userId: recipientId, comment: response }))
+            setRating(0)
+            setHover(null)
+            reset()
+
+        } catch (error) {
+            console.log('Error adding a comment:', error);
+        }
     }
+
     return (
         <div className={styles.comments_page_container}>
             <h2 className={styles.title}>Comments</h2>
 
             <div className={styles.comments_container}>
-                {
-                    <div className={styles.comment_container}>
+                {userComments.map((comment, i) => (
+                    <div key={i} className={styles.comment_container}>
                         <div className={styles.username_icon_container}>
-                            <h6 className={styles.username}></h6>
-                            <img className={styles.delete} src="" alt="" />
+                            <h6 className={styles.username}>{user.username}</h6>
+                            {
+                                <MdDeleteOutline
+                                    className={styles.icon_delete}
+                                />
+                            }
                         </div>
-                        <p className={styles.comment}></p>
+                        <p className={styles.comment}>{comment.comments}</p>
                     </div>
-                }
+                ))}
             </div>
 
             {userPage &&
-                <form className={styles.inp_comment_box}>
+                <form onSubmit={handleSubmit(onSubmit)} className={styles.inp_comment_box}>
                     <input
-                        onChange={e => setComment(e.target.value)} className={styles.input} type="text"
+                        {...register('comment', {
+                            required: "Field is required!"
+                        })}
+                        className={styles.input} type="text"
                         placeholder='Comment...' />
 
                     <div className={styles.rating_container}>
@@ -40,6 +95,7 @@ function CommentsPageComponent({ userPage }) {
                             return (
                                 <label key={index}>
                                     <input
+                                        {...register('rating')}
                                         type="radio"
                                         name="rating"
                                         style={{ display: 'none' }}
@@ -58,7 +114,11 @@ function CommentsPageComponent({ userPage }) {
                         })}
                     </div>
 
-                    <button onClick={addHandler} className={styles.btn}>Add</button>
+                    <button
+                        disabled={!isValid || !rating}
+                        className={styles.btn}>
+                        Add
+                    </button>
                 </form>
             }
         </div>

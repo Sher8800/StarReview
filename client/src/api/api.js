@@ -3,7 +3,17 @@ import { BASE_URL } from './baseUrl'
 
 export const api = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: BASE_URL,
+        prepareHeaders: (headers, { getState }) => {
+            const { token } = getState().user;
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
+    }),
 
     endpoints: (build) => ({
 
@@ -27,13 +37,16 @@ export const api = createApi({
             query: () => 'users/getAllUsers'
         }),
 
-        deleteUser: build.query({
-            query: (id) => `users/user/${id}`
+        deleteUser: build.mutation({
+            query: (id) => ({
+                url: `users/user/${id}`,
+                method: 'DELETE',
+            })
         }),
 
         createComment: build.mutation({
-            query: (body, id) => ({
-                url: `comments/create/${id}`,
+            query: (body) => ({
+                url: 'comments/create/:id',
                 method: 'POST',
                 body
             })
@@ -54,7 +67,7 @@ export const {
     useRegistrationMutation,
     useLoginMutation,
     useGetAllUsersQuery,
-    useDeleteUserQuery,
+    useDeleteUserMutation,
     useCreateCommentMutation,
     useDeleteCommentQuery,
     useGetAllCommentsQuery

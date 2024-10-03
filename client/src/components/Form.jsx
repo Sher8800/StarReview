@@ -8,6 +8,7 @@ import { IoIosPerson } from "react-icons/io";
 import { LuEyeOff } from "react-icons/lu";
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/userSlice';
+import { addUser } from '../redux/slices/usersSlice';
 
 function Form(props) {
     const dispatch = useDispatch()
@@ -34,14 +35,13 @@ function Form(props) {
             if (props.loginApi) {
                 const response = await props.loginApi(formData).unwrap()
                 dispatch(setUser(response))
-
                 navigate('/')
             }
 
             if (props.registerApi) {
-                console.log(formData);
                 const response = await props.registerApi(formData).unwrap()
                 dispatch(setUser(response))
+                dispatch(addUser(response))
                 navigate('/')
             }
 
