@@ -55,7 +55,7 @@ function CommentsPageComponent({ userPage, authUserId }) {
     const deleteUserComment = async (commentId) => {
         const response = await deleteComment(commentId)
         dispatch(removeComment(commentId))
-        dispatch(removeUserComment({ recipientId, commentId }))
+        dispatch(removeUserComment({ recipientId: !userPage ? authUserId : recipientId, commentId }))
     }
 
     const userComments = useMemo(() => {
