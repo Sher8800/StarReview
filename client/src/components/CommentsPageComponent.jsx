@@ -2,14 +2,15 @@ import React, { useMemo, useState } from 'react'
 import styles from '../styles/CommentsPageComponent.module.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaStar } from 'react-icons/fa';
-import { useCreateCommentMutation, useGetAllCommentsQuery } from '../api/api';
+import { useCreateCommentMutation, useDeleteCommentMutation } from '../api/api';
 import { userSelector } from '../redux/slices/userSlice';
 import { useParams } from 'react-router-dom';
-import { addCommentToUser, usersSelector } from '../redux/slices/usersSlice';
+import { addCommentToUser, removeUserComment } from '../redux/slices/usersSlice';
 import { MdDeleteOutline } from "react-icons/md";
 import { useForm } from 'react-hook-form';
+import { addComment, commentsSelector, removeComment } from '../redux/slices/commentsSlice';
 
-function CommentsPageComponent({ userPage, user }) {
+function CommentsPageComponent({ userPage, authUserId }) {
     const {
         register,
         handleSubmit,
@@ -21,36 +22,27 @@ function CommentsPageComponent({ userPage, user }) {
     const params = useParams()
 
     const { id: recipientId } = params
-    const { id: commenterId, roles } = useSelector(userSelector)
-    const { users } = useSelector(usersSelector)
 
-    // const isAdmin = roles.includes("ADMIN");
+    const { id: authorId, roles } = useSelector(userSelector)
+
+    const isAdmin = roles.includes("ADMIN");
 
     const [createCommitApi] = useCreateCommentMutation()
-    const { data: allComments } = useGetAllCommentsQuery(undefined, {
-        refetchOnMountOrArgChange: true,
-    });
+    const [deleteComment] = useDeleteCommentMutation()
 
-    const userComments = useMemo(() => {
-        return allComments?.filter(cmt => cmt.recipient === recipientId)
-    }, [allComments, recipientId]);
-
-    const commentAuthor = useMemo(() => {
-        return users?.filter(user => user._id === userComments.author)
-    }, [users, recipientId]);
-
-    console.log(userComments);
-
-
+    const commentsState = useSelector(commentsSelector);
+    const { comments } = commentsState;
 
     const [rating, setRating] = useState(0)
     const [hover, setHover] = useState(null)
 
     const onSubmit = async (formData, e) => {
+        e.preventDefault();
         e.stopPropagation()
         try {
-            const response = await createCommitApi({ ...formData, commenterId, recipientId, }).unwrap()
-            dispatch(addCommentToUser({ userId: recipientId, comment: response }))
+            const response = await createCommitApi({ ...formData, authorId, recipientId, }).unwrap()
+            dispatch(addComment(response.newComment))
+            dispatch(addCommentToUser({ recipientId, commentId: response.newComment._id }))
             setRating(0)
             setHover(null)
             reset()
@@ -60,6 +52,16 @@ function CommentsPageComponent({ userPage, user }) {
         }
     }
 
+    const deleteUserComment = async (commentId) => {
+        const response = await deleteComment(commentId)
+        dispatch(removeComment(commentId))
+        dispatch(removeUserComment({ recipientId, commentId }))
+    }
+
+    const userComments = useMemo(() => {
+        return comments.filter(cmt => cmt.recipient === (!userPage ? authUserId : recipientId))
+    }, [comments, recipientId]);
+
     return (
         <div className={styles.comments_page_container}>
             <h2 className={styles.title}>Comments</h2>
@@ -68,10 +70,11 @@ function CommentsPageComponent({ userPage, user }) {
                 {userComments.map((comment, i) => (
                     <div key={i} className={styles.comment_container}>
                         <div className={styles.username_icon_container}>
-                            <h6 className={styles.username}>{user.username}</h6>
-                            {
+                            <p className={styles.author_name}>{comment.authorName}</p>
+                            {isAdmin &&
                                 <MdDeleteOutline
                                     className={styles.icon_delete}
+                                    onClick={() => deleteUserComment(comment._id)}
                                 />
                             }
                         </div>

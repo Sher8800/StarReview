@@ -6,38 +6,60 @@ const initialState = {
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState,
+    initialState: initialState,
     reducers: {
-        getUsers(state, action) {
+        getUsers: (state, action) => {
             state.users = action.payload
         },
 
-        addUser(state, action) {
+        addUser: (state, action) => {
             state.users.push(action.payload)
         },
 
-        addCommentToUser(state, action) {
-            const { userId, comment } = action.payload;
-            const user = state.users.find(user => user._id === userId);
-            if (user) {
-                user.comments.push(comment);
+        addCommentToUser: (state, action) => {
+            const { recipientId, commentId } = action.payload;
+
+            const recipientComment = state.users.find(user => user._id === recipientId);
+
+            if (recipientComment) {
+                recipientComment.comments.push(commentId);
+            } else {
+                console.error(`User with ID ${recipientId} not found`);
             }
         },
 
-        removeUsers(state, action) {
-            console.log(action.payload);
 
+        removeUsers: (state, action) => {
             const userId = action.payload;
-            console.log(userId);
             state.users = state.users.filter(user => user._id !== userId);
         },
 
-        removeUsersComments(state, action) {
-            // state.email = null
-        }
+        removeUserComment: (state, action) => {
+
+            const { recipientId, commentId } = action.payload;
+
+            const recipientComment = state.users.find(user => user._id === recipientId);
+
+            if (recipientComment) {
+                recipientComment.comments.filter(comment => comment !== commentId)
+            } else {
+                console.error(`User with ID ${recipientId} not found`);
+            }
+        },
+
+        // clearUsersFromLocalStorage: (state, action) => {
+        //     state.users = []
+        // },
     }
 })
 
 export const usersSelector = state => state.users;
-export const { getUsers, addUser, addCommentToUser, removeUsers, removeUsersComments } = usersSlice.actions;
+export const {
+    getUsers,
+    addUser,
+    addCommentToUser,
+    removeUsers,
+    removeUserComment,
+    clearUsersFromLocalStorage
+} = usersSlice.actions;
 export default usersSlice.reducer;

@@ -5,6 +5,7 @@
     padding: 0px 30px 30px 30px;
     display: grid;
     grid-template-rows: 1fr 10fr 1fr;
+    /* overflow: hidden; */
 }
 
 .comments_container {
@@ -29,8 +30,9 @@
     align-items: center;
 }
 
-.username {
-    font-size: 25px;
+.author_name {
+    color: rgb(8, 189, 255);
+    font-size: 20px;
     margin: 0;
 }
 

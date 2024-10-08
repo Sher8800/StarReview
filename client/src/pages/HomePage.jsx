@@ -6,16 +6,16 @@ import { usersSelector } from '../redux/slices/usersSlice'
 
 function HomePage() {
 
-    const { id } = useSelector(userSelector)
+    const { id: authUserId } = useSelector(userSelector)
     const { users } = useSelector(usersSelector)
 
     const [correntUser] = useMemo(() => {
-        return users.filter(user => user._id === id)
-    }, [users, id]);
+        return users.filter(user => user._id === authUserId)
+    }, [users, authUserId]);
 
     return (
         <UserPageComponent
-            user={correntUser} />
+            user={correntUser} authUserId={authUserId} />
     )
 }
 

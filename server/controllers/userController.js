@@ -1,5 +1,4 @@
 import User from '../models/User.js';
-import Comments from '../models/Comments.js';
 
 class authController {
 
@@ -21,7 +20,6 @@ class authController {
     async deleteUser(req, res) {
         try {
             const userId = req.params.id;
-            console.log(userId);
 
             // Deleting a user
             await User.findByIdAndDelete(userId);

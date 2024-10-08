@@ -9,8 +9,8 @@ function UserPage() {
     const { id } = params
     const { users } = useSelector(usersSelector)
 
-    const [correntUser] = useMemo(() => {
-        return users?.filter(user => user._id === id)
+    const correntUser = useMemo(() => {
+        return users?.find(user => user._id === id)
     }, [users, id]);
 
     return (

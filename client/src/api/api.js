@@ -52,8 +52,12 @@ export const api = createApi({
             })
         }),
 
-        deleteComment: build.query({
-            query: (id) => `comments/remove/${id}`
+        deleteComment: build.mutation({
+            // query: (id) => `comments/remove/${id}`
+            query: (id) => ({
+                url: `comments/remove/${id}`,
+                method: 'DELETE',
+            })
         }),
 
         getAllComments: build.query({
@@ -69,6 +73,6 @@ export const {
     useGetAllUsersQuery,
     useDeleteUserMutation,
     useCreateCommentMutation,
-    useDeleteCommentQuery,
+    useDeleteCommentMutation,
     useGetAllCommentsQuery
 } = api 

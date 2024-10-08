@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 const generateAccessToken = (id, roles) => {
     const payload = { id, roles }
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }
     )
 }
 

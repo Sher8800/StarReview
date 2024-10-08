@@ -3,7 +3,7 @@ import styles from '../styles/UserPageComponent.module.css'
 import userFoto from '../images/userFoto.png'
 import CommentsPageComponent from './CommentsPageComponent';
 
-function UserPageComponent({ user, userPage }) {
+function UserPageComponent({ user, userPage, authUserId }) {
     if (!user) {
         return (
             <p>Loading...</p>
@@ -31,7 +31,7 @@ function UserPageComponent({ user, userPage }) {
                     </p>
                 </div>
             </div>
-            <CommentsPageComponent userPage={userPage} user={user} />
+            <CommentsPageComponent userPage={userPage} authUserId={authUserId} />
         </div>
     )
 }

@@ -5,6 +5,8 @@ import { PiSignOutLight } from "react-icons/pi";
 import avatar from '../images/avatar.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { exit, userSelector } from '../redux/slices/userSlice';
+import { clearCommentsFromLocalStorage } from '../redux/slices/commentsSlice';
+import { clearUsersFromLocalStorage } from '../redux/slices/usersSlice';
 
 function Header() {
 
@@ -12,6 +14,8 @@ function Header() {
 
     const logOut = () => {
         dispatch(exit())
+        // dispatch(clearCommentsFromLocalStorage())
+        // dispatch(clearUsersFromLocalStorage())
     }
 
     const { username } = useSelector(userSelector)

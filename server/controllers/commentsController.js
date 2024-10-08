@@ -20,7 +20,7 @@ class commentsController {
 
     async createComment(req, res) {
         try {
-            const { comment, rating, commenterId, recipientId } = req.body
+            const { comment, rating, authorId, recipientId } = req.body
 
             // Finding the author of the comment
             const recipient = await User.findById(recipientId)
@@ -29,14 +29,15 @@ class commentsController {
             }
 
             // Finding the recipient of the comment
-            const commenter = await User.findById(commenterId)
-            if (!commenter) {
-                return res.status(400).json({ message: 'CommenterId not found' })
+            const author = await User.findById(authorId)
+            if (!author) {
+                return res.status(400).json({ message: 'Author not found' })
             }
 
             //Create a new comment
             const newComment = new Comments({
-                author: commenter._id,
+                author: author._id,
+                authorName: author.username,
                 recipient: recipient._id,
                 comments: comment,
                 rating
@@ -49,7 +50,7 @@ class commentsController {
             recipient.comments.push(newComment._id);
             await recipient.save();
 
-            return res.status(200).json({ message: 'Comment created successfully' });
+            return res.status(200).json({ newComment, message: 'Comment created successfully' });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: 'Server error' });

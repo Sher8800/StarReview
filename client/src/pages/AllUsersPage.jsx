@@ -13,11 +13,9 @@ function AllUsersPage() {
     const { users } = useSelector(usersSelector)
     const { roles, id: adminId } = useSelector(userSelector)
 
-
     const [deleteUser] = useDeleteUserMutation();
 
     const isAdmin = roles.includes("ADMIN");
-    console.log(users);
 
     const handleDelete = async (e, userId) => {
         e.stopPropagation()
@@ -52,7 +50,7 @@ function AllUsersPage() {
                     </Link>
                     <div className={styles.role_icon_box}>
                         <h5>{user.roles[0]}</h5>
-                        {isAdmin && user._id != adminId &&
+                        {isAdmin && user._id !== adminId &&
                             <MdDeleteOutline
                                 className={styles.icon_delete}
                                 onClick={(e) => handleDelete(e, user._id)} />
