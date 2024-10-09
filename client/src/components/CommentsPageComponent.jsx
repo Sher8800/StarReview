@@ -53,14 +53,14 @@ function CommentsPageComponent({ userPage, authUserId }) {
     }
 
     const deleteUserComment = async (commentId) => {
-        const response = await deleteComment(commentId)
+        await deleteComment(commentId)
         dispatch(removeComment(commentId))
         dispatch(removeUserComment({ recipientId: !userPage ? authUserId : recipientId, commentId }))
     }
 
     const userComments = useMemo(() => {
         return comments.filter(cmt => cmt.recipient === (!userPage ? authUserId : recipientId))
-    }, [comments, recipientId]);
+    }, [comments, recipientId, authUserId, userPage]);
 
     return (
         <div className={styles.comments_page_container}>
@@ -71,12 +71,29 @@ function CommentsPageComponent({ userPage, authUserId }) {
                     <div key={i} className={styles.comment_container}>
                         <div className={styles.username_icon_container}>
                             <p className={styles.author_name}>{comment.authorName}</p>
-                            {isAdmin &&
-                                <MdDeleteOutline
-                                    className={styles.icon_delete}
-                                    onClick={() => deleteUserComment(comment._id)}
-                                />
-                            }
+                            <div className={styles.delete_stars_container}>
+
+                                <div className={styles.stars_container}>
+                                    {[...Array(comment.rating)].map((star, i) => {
+                                        return (
+                                            <FaStar
+                                                key={i}
+                                                size={30}
+                                                color={'#ffc107'}
+                                                className={styles.comment_star}
+                                            />
+                                        );
+                                    })}
+                                </div>
+
+                                {isAdmin &&
+                                    <MdDeleteOutline
+                                        className={styles.icon_delete}
+                                        onClick={() => deleteUserComment(comment._id)}
+                                    />
+                                }
+                            </div>
+
                         </div>
                         <p className={styles.comment}>{comment.comments}</p>
                     </div>

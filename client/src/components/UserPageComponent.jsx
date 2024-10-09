@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styles from '../styles/UserPageComponent.module.css'
 import userFoto from '../images/userFoto.png'
 import CommentsPageComponent from './CommentsPageComponent';
+import { useSelector } from 'react-redux';
+import { commentsSelector } from '../redux/slices/commentsSlice';
 
 function UserPageComponent({ user, userPage, authUserId }) {
+
+    const commentsState = useSelector(commentsSelector);
+    const { comments } = commentsState;
+
+    const userComments = useMemo(() => {
+        return comments.filter(cmt => cmt.recipient === user._id)
+    }, [comments, user._id]);
+
+    const sumRating = userComments.reduce((acc, comment) => acc + comment.rating, 0);
+    const averageRating = (sumRating / userComments.length).toFixed(1);
+
     if (!user) {
         return (
             <p>Loading...</p>
@@ -27,7 +40,7 @@ function UserPageComponent({ user, userPage, authUserId }) {
                         Role: <span>{user.roles}</span>
                     </p>
                     <p className={styles.user_data}>
-                        Rating: <span>5</span>
+                        Rating: <span>{averageRating > 0 ? averageRating : 0}</span>
                     </p>
                 </div>
             </div>
